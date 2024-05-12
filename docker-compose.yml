@@ -1,26 +1,29 @@
 version: "3"
-
 services:
   nc:
     image: nextcloud:apache
+    restart: always
     ports:
       - 8000:80
-    volumes:
-      - nc_data:/var/www/html/data
     environment:
       - POSTGRES_HOST=db
       - POSTGRES_PASSWORD=nextcloudpassword
       - POSTGRES_DB=nextcloud
       - POSTGRES_USER=nextcloud
+    volumes:
+      - nc_data:/var/www/html
+    depends_on:
+      - db
 
   db:
     image: postgres:alpine
-    volumes:
-      - db_data:/var/lib/postgresql/data
+    restart: always
     environment:
-      - POSTGRES_PASSWORD=<password_postgres>
+      - POSTGRES_PASSWORD=nextcloudpassword
       - POSTGRES_DB=nextcloud
       - POSTGRES_USER=nextcloud
+    volumes:
+      - db_data:/var/lib/postgresql/data
     expose:
       - 5432
 
